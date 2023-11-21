@@ -1,0 +1,570 @@
+cloudformation
+route53 hybrid / vpn
+db types and improves elasticache
+ec2 life cycle
+cloudfront protocols
+site as s3
+iam policies json
+mfa reset root account
+-------------------------------------------------
+hashcorp packer/image builder
+terraform/cloudformation(hcl no terraform
+prometheus-log
+ANSIBLE
+
+
+
+
+
+cloudwatch services:
+log- any coustom log data,app logs, lambda logs
+metrics- represents a time-ordered set of data points, a variable to monitor
+events-trigger an event based on condition
+alarms-trigger notifications based on metrics wich brech a defined threshold
+additional conf
+- 1de 1 erro alerta
+-5 coletas 5 erros alerta
+pode usar actions auto scaling
+ec2
+system manager
+
+dashboards-create visualisation based on metrics
+servicelens-visualize and analize the health,performance,availability of your serverless app
+containerinsights-collects,aggregates and summarizes metrics and logs from your conteinerized apps
+synthetics-test your web-apps to see if they're broken
+contributor insights-view the top contributors impacting the performance of your systems and app in real time
+
+
+CLOUDWATCH LOGS
+-export logs to s3:you can export logs to s3 to do things like perform custom analysis
+-stream to elasticsearch service: you can stream logs to an ES cluster in near real-time to have more robust full text search 
+-stream cloudtrail events to cloudwatch logs:you can turn on cloudtrail to stream event data
+-log security:logs by default are encripted
+-log filtering:logs can be filtered using a filtering syntax- cloudwatch insighths(sub-service)
+-log retention:by default logs are kept indefinitely and never expire you c an adjust the retention policy for each log groups
+
+CLOUDWATCH LOGS- LOGS GROUP
+a collection of log streams. Its common to name log groups with the forware slashes syntax. 
+/1/prod/app
+/1/prod/db
+/1/dev/app
+
+CLOUDWATCH LOGS- LOG STREAMS
+a log stream represents a sequence of events from a app or instance monitored
+
+CLOUDWATCH LOGS- LOG EVENTS
+represents a single event in a log file. Log events canbe seen within a log stream
+
+CLOUDWATCH LOG- LOG INSIGHTS
+logs insights enables you to interactively sarch and analize you cw logdata and has the following advantages:
+-more robust filtering then using the simple Filter events in a Log Stream
+-less burdensome then having to export logs to s3 and analyze them via Athena
+
+CLOUDWATCH METRICS
+a cw metric represent a time-orderedset of data points
+Its a variable that is monitored over time
+custom metrics
+standard 1min
+high<1min to 1 sec
+CW AVAILABILITY OF DATA
+EC2
+basic 5min
+detailed monitoring 1 min
+
+OTHER SERVICE
+basic 1\3\5
+detailed n/a
+MAJORITY OF AWS SERVICES IS 1 MIN
+
+CLOUDWATCH AGENT
+the cw agent can be installed using aws systems manager(SSM)
+to use/install must attach CWAgentServerRole IAM role to the EC2 instance
+is needed to collect logs and send to a Log Group
+
+EVENTBRIDGE - is a serverless event bus service that is useed for app integration by streaning real-time data to you app/ can schedule rules(up to 5 targets)
+EVENTBUS - an eventbus receives events from source and route events to a target based on rules
+
+CLOUDWATCH ALARMS
+a cw alarm monitors a cloudwatch metric based on a defined threshold
+
+
+BILLING ALARM
+use ESTIMATEDCHARGES metric
+thresold type to static
+set alarm condition to GREATER
+set threshold vlaue
+
+CLOUDTRAIL
+log api's calls
+
+CLOUDTRAIL Event History
+ loga 90 dias, mais que isso precisa de criar um Trail que é guardado num s3 e precisa do Amazon Athena pra analizar
+
+OPSWORKS
+is a configuration management service that provides fully-managed instances for CHEF and PUPPET
+What is configuration management
+-the act of maintaining a specific software configuration and the ability to remotely make configuration changes to servers in way that they can be monitored,audited and automated
+What is Software Proviaioning
+- the act of configuring software packages on servers. Setting up all the software and configuration requirements to run web app
+What is App Deployment
+-the act of deploying new versions of web-app or roll-back to previous app version
+ex.CHEF PUPPET ANSIBLE
+3 VERSORS
+OpsWork Stack
+Chef Automate
+Puppet Enterprise
+
+OpsWorks Stacks
+a managed version of chef 11 e 12 a configuration management
+easily upgrade your os ON SETUP UPDATE BY DEFAULT BUT ONLINE NOT
+yum update -y on AMAZON LINUX,UBUNTU, CENTOS, RH ENTERPRISE
+can attach load balancer CLASSIC ONLY
+cria o clb e associa
+can define container layers and rds(cria antes e associa) layers
+set IAM User Permissions to cotrol stack operations
+schedule EC2 to run
+set EC2 to run auto scaling base cpu usage
+pode ser 2 tipos time based e load base
+opsworks provides a monitoring dashboard (memory used without agent)
+not support chef14
+you can run commands - allows you to perform manual operations on your stack
+-update custom cookbooks
+-execute recipes-executte a specified set of recipeson instance
+-setup run the instances's setup recicpes
+-configure run instances configure recipes
+-upgrade os(amazon linux 1 only)
+*every linux haw opsswork stack agent cli installed by default
+
+OSI MODEL
+
+7-aplication
+closet to the end-users, protocols http/s ssh, pop3, imap,dns,ftp,rdp
+6-presentetion
+format and delivers info to app layer
+5-session
+aut who is doing what on a pc or device
+4-transport
+responsible for end-end connections and reliability
+tcp/udp protocolos
+icmp control protocol
+3-network
+routing ips
+ipsec-aut e enc packets
+2-data link
+ responsavel or empacotar dados nos frames e transferir para os nós de rede
+1-physical
+raw bits(bitstream) as a physical signal 000000100000010011000000
+
+TCP/IP
+
+are a suite of protocols used on imternet
+
+VPC
+Provision a logically isolated section of the aws cloud wher you can launch aws resources in a virtual network that you define
+
+
+
+-VIRTUAL PRIVATE GATEWAY
+lado da amazon de uma vpn
+
+-NETWORK ACESS CONTROL LIST
+libera in e out
+asssociada a subnet
+stateless(tudo liberado no in b e liberado no out)
+
+-INTERNET GATEWAY
+acesso internet 
+atach to a vpc
+
+
+-ROUTING TABLES
+associar a subnets rotas(nat gw igw, vpcpoints(auto))
+
+-SECURITY GROUPS
+
+statefull(se libera in, libera out)
+1por 2ec2
+o que nao liberar não vai
+liberar explicto
+multiple instances across multiple subnets can belong to a sg
+source pode ser outro sg na regra
+-60in e 60 out
+-16sg por ENI
+
+-PUBLIC SUBNETS
+com acesso externo
+
+-PRIVATE SUBNETS
+sem acesso 
+
+-CUSTOMER GATEWAY
+$representação o fireall onpremises
+
+-VPC ENDPOINTS
+$used to connet to services from different VPC's whitou internet, ex. e2c numa vpc falando com um s3 em outra vpc
+dois tipos, interface endpoint$$ e gateway endpoint
+cria para um serviço, escolhe vpc(interface ou gateway)
+gateway-pra s3 e dynanodb
+interface pra athena, cloudwatch etc
+
+-VPC PEERING
+allow you to connect one vpc to another over a direct network
+
+-INTERFACE ENDPOINT
+is a ENI com um ip privado, powered by aws privateLink
+acessa serviços na aws dentro da rede aws
+
+-GATEWAY ENDPOINT
+is a target for specific route in your route table
+suportado em varios dispositivos
+só suporta dynamodb ed s3
+cria vpc
+cria subnets
+cria rot pra cada subnet
+cri igw
+edita rota e aponta pro igw
+
+-NAT GATEWAY
+$ 1 por availability zone, começa com 5mbs escalavel ate 45
+$NAT é usado nas VPC publica para direcionar algum host da subnut privada para internet
+cria na interface publica
+-redundaznte na az(1 por az)
+precisa editar rt deseja acesso
+
+
+VPC FLOW LOGS
+allow you to capture ip traffic information in and out of nics na sua VCP
+pode ser criado para vpc inteira, subnets ou nics
+vpc flow nao poede muudar conf depois que cria
+vpc flow contem ip e nao hostname
+some instancess traffic is not monitored
+-trafego  gerado contactando AWS dns
+-ativação de windows
+-dhcp
+-todo trafego para o ip reservado do default vpc router
+
+CLOUDFRONT
+logs default precisa de permissao no bucket
+
+BILLING ALARM
+use ESTIMATEDCHARGES metric
+thresold type to static
+set alarm condition to GREATER
+set threshold vlaue
+
+CLOUDTRAIL
+log api's calls
+
+CLOUDTRAIL Event History
+ loga 90 dias, mais que isso precisa de criar um Trail que é guardado num s3 e precisa do Amazon Athena pra analizar
+
+comando pra conferir ondea maquina ta dps do ssm
+sudo -i
+
+diferença erros 4xx e 5xx
+4xx e lado cliente
+5xx e lado do servidor 
+504-timeout/persistencia da app/acesso a db
+500 - codigo app
+502- erro no backend
+503 - erro servidor de app
+
+DEPLOY
+
+ROLLING - vai trocando aos poucos
+BLUE GREEN - duas estruturas identicas e muda lb pro nova qnd tiver ok
+CANARY - route53 manda parte pro novo
+
+
+AMI
+imagebuilder
+--pre-reqs
+-iam com 
+-imagebuilder
+-ssmcoreinstance
+
+CLOUDFORMATION
+resource é o unico requirido dos parametros
+
+
+Elastic LOAD BALANCE 
+solução pta balancear carga,e são os tres tipos:
+
+network loadbalance(TCP E UDP)
+-lb com roteamento camada 4
+-ex video conferencia
+-baixa latencia necessitada
+operate on layer 4
+
+app load balancer(HTTP E HTTPS)
+porta 80 e 443
+pode ser app na rede interno
+waf can be attached
+operate on layer 7
+can enable sticky sessions
+pode ver ip source das sessoes x-foward-for header
+Content-based Routing
+If your application is composed of several individual services, an Application Load Balancer can route a request to a service based on the content of the request such as Host field, Path URL, HTTP header, HTTP method, Query string or Source IP address.
+
+Host-based Routing : You can route a client request based on the Host field of the HTTP header allowing you to route to multiple domains from the same load balancer.
+
+Path-based Routing : You can route a client request based on the URL path of the HTTP header.
+
+HTTP header-based routing : You can route a client request based on the value of any standard or custom HTTP header.
+
+HTTP method-based routing : You can route a client request based on any standard or custom HTTP method.
+
+Query string parameter-based routing : You can route a client request based on query string or query parameters.
+
+Source IP address CIDR-based routing : You can route a client request based on source IP address CIDR from where the request originates.
+
+gateway load balancer
+-usa qnd usa 3o. elementos, tipo fortigate(bota gw na frente)
+
+ROUTE53
+highly available and scalable cloud domain name system
+create dns routing rules eg. failover
+A- rotear nome pra ipv4
+AAAA - ipv6
+CAA- Um registro CAA especifica quais autoridades de certificação (CAs) têm permissão para emitir certificados para um domínio ou subdomínio
+CNAME - maps DNS queries for the name of record to another domain
+ALIAS -are smart where they can detec the change of ip(aws resource) and continuously keep that endpoint to the correct resource 
+Alias records let you route traffic to selected AWS resources, such as CloudFront distributions and Amazon S3 buckets. They also let you route traffic from one record in a hosted zone to another record.
+NS- The most common use for an NS record is to control how internet traffic is routed for a domain. To use the records in a hosted zone to route traffic for a domain, you update the domain registration settings to use the four name servers in the default NS record. (This is the NS record that has the same name as the hosted zone.)
+SOA- A start of authority (SOA) record provides information about a domain and the corresponding Amazon Route 53 hosted zone. For information about the fields in an SOA record
+SRV- An SRV record Value element consists of four space-separated values. The first three values are decimal numbers representing priority, weight, and port. The fourth value is a domain name. SRV records are used for accessing services, such as a service for email or communications. For information about SRV record format, refer to the documentation for the service that you want to connect to.
+
+=-routing policies
+-simple routing - multiplos ips, resulta numa seleção randon
+-weighted routing - rotas em pesos para dividir o trafego(percentage)
+-latency based routing - manda pra regiao onde tem menor latencia
+-failover routing - se o primeiro cai, manda pro segundo
+-geolocation routing - baseado onde o user ta
+-geo-proximity routing - baseado onde ta o recurso,opcionalmente muda o trafego de recursos de uma localizaçã para em outra(bias, need traffic flow)
+-milti-value answer routing-escolhe randon(healt check)
+
+=-resolver
+regional serviço que deixa rotear as dns queries entre sua vpc e onpremisse
+-inbound and outboun 
+configure endpoints que liberam queries from ad to your vpc
+-inbound
+configure endpoint que lib era dns queries para sua vpc da sua on-premisse network ou outra vpc
+consulta outra
+-outbound
+configure endpointt que libera dns queries da sua vpc para sua on-premisses netwoek ou outra vpc
+deixa ser consultado
+
+auto scalling groups
+set scalling groups wich will automatically launch additional ec2 ou shutdown instances to meet current demand
+automatic scaling can occur via: capacity settings(min,desired, max)/health check/scaling policies(mantain a specifc metric a target value)
+ 
+elasticidade
+precisou usa, não precisa libera
+
+escalabilidade
+s3, exemplo. cresce infinitamente, aumento disco sob demanda
+
+vertical scalling
+aumenta tamanho da maquina/desligar maquina
+
+horizontal scalling
+aumenta mais maquinas
+
+scaling plan
+
+auto scaling
+lauching template
+-detalhes da instancia 
+
+rolling deploy
+-auto scaling
+image builder
+launch template
+
+ec2 
+cloud computig service
+chose you os, storage, memory, throughput, laumch and 
+ssh in your instance in minutes
+inves de colocar seus aws acces keys no seu codigo,para que sua instancia tenha acesso a certos serviço, voce pode atachar uma regra na sua instancia via instance profile(cria iam role e referencia a instance profile, e a ec2 tb)conteiner  for iam roles thatt you can use to pass role information to an ec2 when ela starta
+user-data(scripts de inicialzação da instancia)
+meta-data(informações geral da instancia.ami.type)
+curl http://169.254.169.254/latest/______-data
+
+
+ec2 types
+a1,t3.t3a,t3,m5,m5a e m4 - general purpose
+web servers and code repositories
+
+c5 c5n e c4 - compute optimized
+ideal for compute bound app que tem beneficio da alta performance do processador
+scientidic modeling, dedicated game servers e servers engine
+
+r5, r5a, x1e, x1, High Memory z1d - memory optimized
+fast performance for workloads tha process large data sets in memory
+in-memory caches,in-memory databases, real time big ddata analytics
+
+p3,p2, g3,f1 -accelerated optimized
+hardware accelerators or co-processors 
+ml,comp finance,seismic amalysis, speech recognition
+
+l3,l3en, d2,h1 -storage optimized
+hight sequencial read and write access to very large data sets on local storage
+NoSQL, in-memory transactional datab ases, data warehousing
+
+placement groups(arer free)
+-cluster
+coloca as instancias juntasx dentro da AZ
+low-latency network performance 
+cluster cant be multi-AZ
+
+-partition
+espalha instancias atraves de partições logicas
+cada partição nãzo compartilha o hardware do lado com outro( rack por partição)
+serve bem para grandes , distribuidos e replicados workloads (hadoop, cassandra, kafka)
+
+-spread
+cada instancia num rack
+quando instancias criticas precisam ficar separadas
+voce pode espaçhar 7 instancias, pode ser multiAZ
+
+=-Systems Manager
+é conhecido como ssm(simple systems manager) used to automate the management of vms
+-patching
+-monitoring vm
+-rodar COMMANDS win/linx on instances
+-supplying configurations to vm
+-securelly connect(IAM ROLES)(agent ja vem amazon lnx ubunto e winserver 2008 w 2012, 2016,2019 e amazon ecs-optimized)
+ssminstancecore
+agentserverpolicy
+  EC2DefaultInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+          - Action:
+              - sts:AssumeRole
+            Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+        - arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy
+  EC2DefaultInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref EC2DefaultInstanceRole
+
+maquina privada tem q ter nat gw
+
+
+-manual installation
+download for your os from s3 an url
+install with your packet manager
+start ssm agent
+
+-maintaining a configured state of vms
+
+-ssm explorer is a customizable operations dashboard that reports info about you resources
+-opscenter is a consolidation of you opeerational work itens(opsitens)for you it team view,investigate,resolve
+-opsitens represents operational work that needs performed
+-ssm run commands lets you remotely and secure manage the configuration of you managed instances,execute bash or powershell command, run chef recipes or ansible playbooks,
+-ssm automation is a service that allows you to define documents(runbooks)that execute a sequence of commandsx carring out the runbooks actions. A runbook is document that contains a serie of instructional steps to perform an operation.
+-ssm distributor lets you package your own software or install agent packages
+
+Secrets manager
+protect secrets needed to acces your app and services, easy rotate,manage and retrieve database credentials, api keys and others secrets throught their lifecycle.
+rds, redshift documentDB
+you can setup automatic rotation for any database, is performed by lambda
+
+ELASTIC BLOCK STORE
+A virtual hd in the cloud, create new volumes attach to ec2 instances, backup via snap and easy encript
+5 types
+General purpose ssd(gp2) for general usage without specific requeriments 16000 iops
+provisioned iops ssd(io1) when ypu require really fast inpit and output 64000
+throughput optimized hdd (st1) magnetic drive optimized for quick throughput500
+cold hdd (sc1) lowest cost hdd volume for infrequently access workloads 250
+ebs magnetic (sstandard) previou generation hdd 40-200
+
+EBS MOVING VOLUMES
+snapshot e ou copia pra outra region ou sobe outra maquina com essa ami do snap em outra AZ
+
+ENCRIPTAR VOLUMES
+take snap to ami uncript
+copy and select encript
+cria nova ami from enc snap
+launch instance com ami encript
+
+STORAGE GATEWAY
+extendig, backin up onprimese storage to the cloud
+
+File gateway
+your files are storage as objects inside you s3, access file through nfs or smb mount point
+buckets policies, versioning,lifecycle management and cross-region replication apply directly to objects stored in you bucket
+
+Volume gateway
+presents you app with disk volumes using icsi 
+data that is writen to volumes can be assynchronously backed-up as point-in-time snapshots of the volumes, and stored in the cloud as ebs 
+all sap storage is also compressed to help minimize your storage charges.
+snaps sao inc
+
+Volume gateway- stored volumes
+primary data is on-premisses and assync to aws s3 up to 16T
+
+volume gateway - cached volumes
+primary data is a s3 and on premises has frequent accessed files cached in you storage gatesway
+
+tape gateway
+s3 glacier is used 
+
+ELASTICACHE
+Managed caching service wich either runs redis or memcached
+only accessible to resource on same vpc
+
+memcache is preferred for caching html fragments, is a simple key/value store, very fast - multthread but no snap or replication
+redis can perform many different kinds of operations, its very good for leaderboards, keep track of unread notification data.
+
+IAM
+user-who log into console
+groups- users that share permissions levels
+roles- associate permissions to a role and then assign to an user or groups
+policies- json documents wich grant permissions for someone to a service. policies are attached to iam identities
+
+content of a policy
+statement-conteiner for the policy element 
+sid-optional-way for labelimg yours statements
+effect-setwhether policy will allow or deny
+principal- account,user,role,or federated user to which you would like to allow or deny access
+action- list of actions permissoes listadas ou * in policy
+resource - the resource to witch the actions applies
+condition-optional circumstances under which policy grants permissions
+
+2 access keys per user
+
+MFA
+user pode ligar
+os users precisam ativar sozinhos , admin não pode forçar diretamente
+o admin pode criar uma policy requirindo mfa para certo recurso
+reset root mfa precisa acesso a email e celular
+
+S3
+s3 object has:
+key- name of object
+value-the data itself made up of a sequence of bytes
+version id-when versioning is on, is the version
+metadata-additional information attached to a object
+
+s3 bucket é nome universal, contém objetos , nomes unicos
+s3 classes
+-standard-fast, 11 9´s durability. replicated across at least 3 az´s
+-intelligent tiering- use ml to analize your object usage and determine the appropriate storage class.data is moved to the mosxt effective access tier, whitout any performance impact or added overhead
+standard infrequent access(ia) sill fast! cheaper if you access files less than once a month. additional retrivial fee is applied. 50%less than standard
+one zone ia - still fast objects only exist in one az availability is 99.5% but cheapper than standard by 20% less. data could get destroyed. a retrivial fee is applied
+glacier - for long-term cold storage, the retrieval of data can take minutes or hours, but the off is very cheap storage
+glacier deep archieve- the lowest cost storage class. data retrieval time is 12 hours.
+
+
+
